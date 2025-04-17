@@ -19,7 +19,9 @@ import { Route as LayoutImport } from './routes/_layout'
 import { Route as LayoutIndexImport } from './routes/_layout/index'
 import { Route as LayoutSettingsImport } from './routes/_layout/settings'
 import { Route as LayoutItemsImport } from './routes/_layout/items'
+import { Route as LayoutFormImport } from './routes/_layout/form'
 import { Route as LayoutAdminImport } from './routes/_layout/admin'
+import { Route as LayoutNewItemIdImport } from './routes/_layout/new/$itemId'
 
 // Create/Update Routes
 
@@ -63,8 +65,18 @@ const LayoutItemsRoute = LayoutItemsImport.update({
   getParentRoute: () => LayoutRoute,
 } as any)
 
+const LayoutFormRoute = LayoutFormImport.update({
+  path: '/form',
+  getParentRoute: () => LayoutRoute,
+} as any)
+
 const LayoutAdminRoute = LayoutAdminImport.update({
   path: '/admin',
+  getParentRoute: () => LayoutRoute,
+} as any)
+
+const LayoutNewItemIdRoute = LayoutNewItemIdImport.update({
+  path: '/new/$itemId',
   getParentRoute: () => LayoutRoute,
 } as any)
 
@@ -96,6 +108,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutAdminImport
       parentRoute: typeof LayoutImport
     }
+    '/_layout/form': {
+      preLoaderRoute: typeof LayoutFormImport
+      parentRoute: typeof LayoutImport
+    }
     '/_layout/items': {
       preLoaderRoute: typeof LayoutItemsImport
       parentRoute: typeof LayoutImport
@@ -108,6 +124,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutIndexImport
       parentRoute: typeof LayoutImport
     }
+    '/_layout/new/$itemId': {
+      preLoaderRoute: typeof LayoutNewItemIdImport
+      parentRoute: typeof LayoutImport
+    }
   }
 }
 
@@ -116,9 +136,11 @@ declare module '@tanstack/react-router' {
 export const routeTree = rootRoute.addChildren([
   LayoutRoute.addChildren([
     LayoutAdminRoute,
+    LayoutFormRoute,
     LayoutItemsRoute,
     LayoutSettingsRoute,
     LayoutIndexRoute,
+    LayoutNewItemIdRoute,
   ]),
   LoginRoute,
   RecoverPasswordRoute,
