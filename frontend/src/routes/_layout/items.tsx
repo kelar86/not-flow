@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next"
 import {
   Container,
   EmptyState,
@@ -42,6 +43,7 @@ export const Route = createFileRoute("/_layout/items")({
 })
 
 function ItemsTable() {
+  const { t } = useTranslation()
   const navigate = useNavigate({ from: Route.fullPath })
   const { page } = Route.useSearch()
 
@@ -70,9 +72,9 @@ function ItemsTable() {
             <FiSearch />
           </EmptyState.Indicator>
           <VStack textAlign="center">
-            <EmptyState.Title>You don't have any items yet</EmptyState.Title>
+            <EmptyState.Title>{t("You don't have any items yet")}</EmptyState.Title>
             <EmptyState.Description>
-              Add a new item to get started
+              Куку
             </EmptyState.Description>
           </VStack>
         </EmptyState.Content>
@@ -87,7 +89,7 @@ function ItemsTable() {
           <Table.Row>
             <Table.ColumnHeader w="sm">ID</Table.ColumnHeader>
             <Table.ColumnHeader w="sm">Title</Table.ColumnHeader>
-            <Table.ColumnHeader w="sm">Description</Table.ColumnHeader>
+            <Table.ColumnHeader w="sm">{t("table.description")}</Table.ColumnHeader>
             <Table.ColumnHeader w="sm">Actions</Table.ColumnHeader>
           </Table.Row>
         </Table.Header>
@@ -132,10 +134,11 @@ function ItemsTable() {
 }
 
 function Items() {
+  const { t } = useTranslation();
   return (
     <Container maxW="full">
       <Heading size="lg" pt={12}>
-        Items Management
+        {t("BLABLA")}
       </Heading>
       <AddItem />
       <ItemsTable />

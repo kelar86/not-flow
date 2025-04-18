@@ -1,3 +1,5 @@
+import "./i18n";
+
 import {
   MutationCache,
   QueryCache,
@@ -41,10 +43,10 @@ declare module "@tanstack/react-router" {
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <CustomProvider>
-      <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
-      </QueryClientProvider>
-    </CustomProvider>
+      <CustomProvider>
+        <QueryClientProvider client={queryClient}>
+          <RouterProvider router={router} />
+        </QueryClientProvider>
+      </CustomProvider>
   </StrictMode>,
 )
