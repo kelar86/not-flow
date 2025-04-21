@@ -18,8 +18,10 @@ import {
 import useAuth from "@/hooks/useAuth"
 import useCustomToast from "@/hooks/useCustomToast"
 import { handleError } from "@/utils"
+import { Trans, useTranslation } from "react-i18next"
 
 const DeleteConfirmation = () => {
+  const { t } = useTranslation()
   const [isOpen, setIsOpen] = useState(false)
   const queryClient = useQueryClient()
   const { showSuccessToast } = useCustomToast()
@@ -32,7 +34,7 @@ const DeleteConfirmation = () => {
   const mutation = useMutation({
     mutationFn: () => UsersService.deleteUserMe(),
     onSuccess: () => {
-      showSuccessToast("Your account has been successfully deleted")
+      showSuccessToast(`${t("settings.danger.delete_success")}`)
       setIsOpen(false)
       logout()
     },
@@ -59,7 +61,7 @@ const DeleteConfirmation = () => {
       >
         <DialogTrigger asChild>
           <Button variant="solid" colorPalette="red" mt={4}>
-            Delete
+            {t("buttons.delete")}
           </Button>
         </DialogTrigger>
 
@@ -67,14 +69,11 @@ const DeleteConfirmation = () => {
           <form onSubmit={handleSubmit(onSubmit)}>
             <DialogCloseTrigger />
             <DialogHeader>
-              <DialogTitle>Confirmation Required</DialogTitle>
+              <DialogTitle>{t("settings.danger.confirm_title")}</DialogTitle>
             </DialogHeader>
             <DialogBody>
               <Text mb={4}>
-                All your account data will be{" "}
-                <strong>permanently deleted.</strong> If you are sure, please
-                click <strong>"Confirm"</strong> to proceed. This action cannot
-                be undone.
+                <Trans>{t("settings.danger.confirm_desc")}</Trans>
               </Text>
             </DialogBody>
 
@@ -86,7 +85,7 @@ const DeleteConfirmation = () => {
                     colorPalette="gray"
                     disabled={isSubmitting}
                   >
-                    Cancel
+                    {t("buttons.cancel")}
                   </Button>
                 </DialogActionTrigger>
                 <Button
@@ -95,7 +94,7 @@ const DeleteConfirmation = () => {
                   type="submit"
                   loading={isSubmitting}
                 >
-                  Delete
+                  {t("buttons.confirm")}
                 </Button>
               </ButtonGroup>
             </DialogFooter>

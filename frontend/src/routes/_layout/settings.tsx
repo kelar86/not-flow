@@ -6,20 +6,26 @@ import ChangePassword from "@/components/UserSettings/ChangePassword"
 import DeleteAccount from "@/components/UserSettings/DeleteAccount"
 import UserInformation from "@/components/UserSettings/UserInformation"
 import useAuth from "@/hooks/useAuth"
+import { useTranslation } from "react-i18next"
 
-const tabsConfig = [
-  { value: "my-profile", title: "My profile", component: UserInformation },
-  { value: "password", title: "Password", component: ChangePassword },
-  { value: "appearance", title: "Appearance", component: Appearance },
-  { value: "danger-zone", title: "Danger zone", component: DeleteAccount },
-]
+const getTabsConfig = (t) => {
+  const tabsConfig = [
+    { value: "my-profile", title: `${t("settings.profile.subtitle")}`, component: UserInformation },
+    { value: "password", title: `${t("settings.password.subtitle")}`, component: ChangePassword },
+    { value: "appearance", title: `${t("settings.appearance.subtitle")}`, component: Appearance },
+    { value: "danger-zone", title: `${t("settings.danger.subtitle")}`, component: DeleteAccount },
+  ]
+  return tabsConfig
+}
 
 export const Route = createFileRoute("/_layout/settings")({
   component: UserSettings,
 })
 
 function UserSettings() {
+  const { t } = useTranslation()
   const { user: currentUser } = useAuth()
+  const tabsConfig = getTabsConfig(t)
   const finalTabs = currentUser?.is_superuser
     ? tabsConfig.slice(0, 3)
     : tabsConfig
@@ -31,7 +37,7 @@ function UserSettings() {
   return (
     <Container maxW="full">
       <Heading size="lg" textAlign={{ base: "center", md: "left" }} py={12}>
-        User Settings
+       {t("settings.title")}
       </Heading>
 
       <Tabs.Root defaultValue="my-profile" variant="subtle">

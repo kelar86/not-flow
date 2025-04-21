@@ -15,6 +15,7 @@ import { PasswordInput } from "@/components/ui/password-input"
 import useAuth, { isLoggedIn } from "@/hooks/useAuth"
 import { confirmPasswordRules, emailPattern, passwordRules } from "@/utils"
 import Logo from "/assets/images/fastapi-logo.svg"
+import { useTranslation } from "react-i18next"
 
 export const Route = createFileRoute("/signup")({
   component: SignUp,
@@ -32,6 +33,7 @@ interface UserRegisterForm extends UserRegister {
 }
 
 function SignUp() {
+  const { t } = useTranslation()
   const { signUpMutation } = useAuth()
   const {
     register,
@@ -83,9 +85,9 @@ function SignUp() {
                 id="full_name"
                 minLength={3}
                 {...register("full_name", {
-                  required: "Full Name is required",
+                  required: `${t("login.required_username")}`,
                 })}
-                placeholder="Full Name"
+                placeholder={t("login.username")}
                 type="text"
               />
             </InputGroup>
@@ -96,10 +98,10 @@ function SignUp() {
               <Input
                 id="email"
                 {...register("email", {
-                  required: "Email is required",
+                  required: `${t("login.required_mail")}`,
                   pattern: emailPattern,
                 })}
-                placeholder="Email"
+                placeholder={t("login.mail")}
                 type="email"
               />
             </InputGroup>
@@ -108,23 +110,23 @@ function SignUp() {
             type="password"
             startElement={<FiLock />}
             {...register("password", passwordRules())}
-            placeholder="Password"
+            placeholder={t("login.password")}
             errors={errors}
           />
           <PasswordInput
             type="confirm_password"
             startElement={<FiLock />}
             {...register("confirm_password", confirmPasswordRules(getValues))}
-            placeholder="Confirm Password"
+            placeholder={t("login.required_confirm")}
             errors={errors}
           />
           <Button variant="solid" type="submit" loading={isSubmitting}>
-            Sign Up
+            {t("login.sign_up")}
           </Button>
           <Text>
-            Already have an account?{" "}
+            {t("login.have_acc")}{" "}
             <RouterLink to="/login" className="main-link">
-              Log In
+              {t("login.log_in")}
             </RouterLink>
           </Text>
         </Container>

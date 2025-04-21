@@ -9,23 +9,25 @@ import { type ItemCreate, ItemsService } from "@/client"
 import type { ApiError } from "@/client/core/ApiError"
 import useCustomToast from "@/hooks/useCustomToast"
 import { handleError } from "@/utils"
+import { useTranslation } from "react-i18next"
 
 export const Route = createFileRoute('/_layout/new/$itemId')({
   component: Form
 })
 
 function Form () {
+  const { t } = useTranslation()
     const navigate = useNavigate();
     const { itemId } = useParams({ strict: false })
     let itemData = null;
-    // console.log('somewhereId =>> ', itemId);
+    // console.log('somewhereId =>> ', typeof itemId);
 
     // to do развести логику добавления новог и редактирования существующего элемента
     // to do рефакторинг - проверка typeof itemId === 'number'
     // to do количество рендеров
 
     if (typeof itemId === 'number') {
-      console.log('Запрашиваю данные')
+      // console.log('Запрашиваю данные')
       function getItem({ id }: { id: string }) {
         return {
           queryFn: () =>
@@ -71,9 +73,9 @@ function Form () {
       },
       onSuccess: () => {
         if (typeof itemId === 'number') {
-          showSuccessToast("Item updated successfully.")
+          showSuccessToast(`${t("items.update_success")}`)
         } else {
-          showSuccessToast("Item created successfully.")
+          showSuccessToast(`${t("items.create_success")}`)
         }
         reset()
         navigate({to: '/items'})
@@ -93,22 +95,22 @@ function Form () {
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
           <Text fontSize="lg" py={2} fontWeight="bold">
-              Let's start to create you own bot!
+           {t("items.create")}
           </Text>         
-          <Text mb={4}>Fill in the details to add a new item.</Text>
+          <Text mb={4}>{t("items.create_desc")}</Text>
           <VStack gap={4}>
               <Field
                 required
                 invalid={!!errors.title}
                 errorText={errors.title?.message}
-                label="Title"
+                label={t("items.bot_name")}
               >
                 <Input
                   id="title"
                   {...register("title", {
-                    required: "Title is required.",
+                    required: `${t("items.required_name")}`,
                   })}
-                  placeholder="Title"
+                  placeholder={t("items.bot_name")}
                   type="text"
                 />
               </Field>
@@ -116,12 +118,12 @@ function Form () {
               <Field
                 invalid={!!errors.description}
                 errorText={errors.description?.message}
-                label="Description"
+                label={t("items.bot_desc")}
               >
                 <Input
                   id="description"
                   {...register("description")}
-                  placeholder="Description"
+                  placeholder={t("items.bot_desc")}
                   type="text"
                 />
               </Field>
@@ -137,7 +139,7 @@ function Form () {
                 colorPalette="gray"
                 disabled={isSubmitting}
               >
-                Cancel
+                {t("buttons.cancel")}
               </Button>
               <Button
               variant="solid"
@@ -145,7 +147,7 @@ function Form () {
               disabled={!isValid}
               loading={isSubmitting}
               >
-                Save
+                {t("buttons.save")}
               </Button>
             </Flex>
       </form>

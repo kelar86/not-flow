@@ -1,4 +1,3 @@
-import { useTranslation } from "react-i18next"
 import {
   Container,
   EmptyState,
@@ -22,6 +21,7 @@ import {
   PaginationPrevTrigger,
   PaginationRoot,
 } from "@/components/ui/pagination.tsx"
+import { useTranslation } from "react-i18next"
 
 const itemsSearchSchema = z.object({
   page: z.number().catch(1),
@@ -72,9 +72,9 @@ function ItemsTable() {
             <FiSearch />
           </EmptyState.Indicator>
           <VStack textAlign="center">
-            <EmptyState.Title>{t("You don't have any items yet")}</EmptyState.Title>
+            <EmptyState.Title>{t("items.no_items")}</EmptyState.Title>
             <EmptyState.Description>
-              Куку
+            {t("items.no_items_desc")}
             </EmptyState.Description>
           </VStack>
         </EmptyState.Content>
@@ -87,10 +87,10 @@ function ItemsTable() {
       <Table.Root size={{ base: "sm", md: "md" }}>
         <Table.Header>
           <Table.Row>
-            <Table.ColumnHeader w="sm">ID</Table.ColumnHeader>
-            <Table.ColumnHeader w="sm">Title</Table.ColumnHeader>
+            <Table.ColumnHeader w="sm">{t("table.id")}</Table.ColumnHeader>
+            <Table.ColumnHeader w="sm">{t("table.title")}</Table.ColumnHeader>
             <Table.ColumnHeader w="sm">{t("table.description")}</Table.ColumnHeader>
-            <Table.ColumnHeader w="sm">Actions</Table.ColumnHeader>
+            <Table.ColumnHeader w="sm">{t("table.actions")}</Table.ColumnHeader>
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -107,7 +107,7 @@ function ItemsTable() {
                 truncate
                 maxW="30%"
               >
-                {item.description || "N/A"}
+                {item.description || `${t("table.empty_description")}`}
               </Table.Cell>
               <Table.Cell>
                 <ItemActionsMenu item={item} />
@@ -138,7 +138,7 @@ function Items() {
   return (
     <Container maxW="full">
       <Heading size="lg" pt={12}>
-        {t("BLABLA")}
+        {t("items.list")}
       </Heading>
       <AddItem />
       <ItemsTable />

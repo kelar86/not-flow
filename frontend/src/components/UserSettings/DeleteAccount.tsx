@@ -1,16 +1,17 @@
 import { Container, Heading, Text } from "@chakra-ui/react"
-
 import DeleteConfirmation from "./DeleteConfirmation"
+import { useTranslation } from "react-i18next"
 
 const DeleteAccount = () => {
+  const { t } = useTranslation()
+
   return (
     <Container maxW="full">
       <Heading size="sm" py={4}>
-        Delete Account
+        {t("settings.danger.delete_acc")}
       </Heading>
       <Text>
-        Permanently delete your data and everything associated with your
-        account.
+        {t("settings.danger.warning")}
       </Text>
       <DeleteConfirmation />
     </Container>
