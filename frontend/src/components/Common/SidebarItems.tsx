@@ -5,8 +5,9 @@ import { FiBriefcase, FiHome, FiSettings, FiUsers } from "react-icons/fi"
 import type { IconType } from "react-icons/lib"
 import type { UserPublic } from "@/client"
 import { useTranslation } from "react-i18next"
+import type { TFunction } from 'i18next'
 
-const getItems = (t) => {
+const getItems = (t: TFunction) => {
   const items = [
     { icon: FiHome, title: `${t("menu.dashboard")}`, path: "/" },
     { icon: FiBriefcase, title: `${t("menu.items")}`, path: "/items" },
