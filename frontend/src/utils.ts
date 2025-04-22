@@ -1,5 +1,7 @@
 import type { ApiError } from "./client"
 import useCustomToast from "./hooks/useCustomToast"
+import "./i18n"
+import i18next from  "./i18n"
 
 export const emailPattern = {
   value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
@@ -20,7 +22,7 @@ export const passwordRules = (isRequired = true) => {
   }
 
   if (isRequired) {
-    rules.required = "Password is required"
+    rules.required = i18next.t("login.required_password")
   }
 
   return rules
@@ -38,7 +40,7 @@ export const confirmPasswordRules = (
   }
 
   if (isRequired) {
-    rules.required = "Password confirmation is required"
+    rules.required = i18next.t("login.required_confirm")
   }
 
   return rules

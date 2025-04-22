@@ -21,8 +21,10 @@ import useAuth from "@/hooks/useAuth"
 import useCustomToast from "@/hooks/useCustomToast"
 import { emailPattern, handleError } from "@/utils"
 import { Field } from "../ui/field"
+import { useTranslation } from "react-i18next"
 
 const UserInformation = () => {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
   const { showSuccessToast } = useCustomToast()
   const [editMode, setEditMode] = useState(false)
@@ -50,7 +52,7 @@ const UserInformation = () => {
     mutationFn: (data: UserUpdateMe) =>
       UsersService.updateUserMe({ requestBody: data }),
     onSuccess: () => {
-      showSuccessToast("User updated successfully.")
+      showSuccessToast(`${t("settings.profile.updated_success")}`)
     },
     onError: (err: ApiError) => {
       handleError(err)
@@ -73,17 +75,25 @@ const UserInformation = () => {
     <>
       <Container maxW="full">
         <Heading size="sm" py={4}>
-          User Information
+          {t("settings.title")}
         </Heading>
         <Box
           w={{ sm: "full", md: "sm" }}
           as="form"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <Field label="Full name">
+          <Field
+            label={t("login.username")}
+            invalid={!!errors.full_name}
+            errorText={errors.full_name?.message}
+          >
             {editMode ? (
               <Input
-                {...register("full_name", { maxLength: 30 })}
+                {...register("full_name", {
+                  required: `${t("login.required_username")}`,
+                  maxLength: 30
+                })}
+                placeholder={t("login.username")}
                 type="text"
                 size="md"
               />
@@ -101,16 +111,17 @@ const UserInformation = () => {
           </Field>
           <Field
             mt={4}
-            label="Email"
+            label={t("login.mail")}
             invalid={!!errors.email}
             errorText={errors.email?.message}
           >
             {editMode ? (
               <Input
                 {...register("email", {
-                  required: "Email is required",
+                  required: `${t("login.required_mail")}`,
                   pattern: emailPattern,
                 })}
+                placeholder={t("login.mail")}
                 type="email"
                 size="md"
               />
@@ -128,7 +139,7 @@ const UserInformation = () => {
               loading={editMode ? isSubmitting : false}
               disabled={editMode ? !isDirty || !getValues("email") : false}
             >
-              {editMode ? "Save" : "Edit"}
+              {editMode ? `${t("buttons.save")}` : `${t("buttons.edit")}`}
             </Button>
             {editMode && (
               <Button
@@ -137,7 +148,7 @@ const UserInformation = () => {
                 onClick={onCancel}
                 disabled={isSubmitting}
               >
-                Cancel
+                {t("buttons.cancel")}
               </Button>
             )}
           </Flex>

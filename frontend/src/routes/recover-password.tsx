@@ -11,6 +11,7 @@ import { InputGroup } from "@/components/ui/input-group"
 import { isLoggedIn } from "@/hooks/useAuth"
 import useCustomToast from "@/hooks/useCustomToast"
 import { emailPattern, handleError } from "@/utils"
+import { useTranslation } from "react-i18next"
 
 interface FormData {
   email: string
@@ -28,6 +29,7 @@ export const Route = createFileRoute("/recover-password")({
 })
 
 function RecoverPassword() {
+  const { t } = useTranslation()
   const {
     register,
     handleSubmit,
@@ -69,26 +71,26 @@ function RecoverPassword() {
       centerContent
     >
       <Heading size="xl" color="ui.main" textAlign="center" mb={2}>
-        Password Recovery
+        {t("login.recovery")}
       </Heading>
       <Text textAlign="center">
-        A password recovery email will be sent to the registered account.
+        {t("login.recovery_desc")}
       </Text>
       <Field invalid={!!errors.email} errorText={errors.email?.message}>
         <InputGroup w="100%" startElement={<FiMail />}>
           <Input
             id="email"
             {...register("email", {
-              required: "Email is required",
+              required: `${t("login.required_mail")}`,
               pattern: emailPattern,
             })}
-            placeholder="Email"
+            placeholder={t("login.mail")}
             type="email"
           />
         </InputGroup>
       </Field>
       <Button variant="solid" type="submit" loading={isSubmitting}>
-        Continue
+        {t("buttons.continue")}
       </Button>
     </Container>
   )
