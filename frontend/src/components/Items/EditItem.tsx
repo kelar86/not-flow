@@ -7,7 +7,7 @@ const EditItem = ({ item }: EditItemProps) => {
   const { t } = useTranslation()
 
   return (
-    <RouterLink to="/new/$itemId" params={{ itemId: item.id }} >
+    <RouterLink to="/item/$itemId" params={{ itemId: item.id }} >
       <Button variant="ghost">
         <FaExchangeAlt fontSize="16px" />
         {t("buttons.edit")}

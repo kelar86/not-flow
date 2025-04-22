@@ -8,7 +8,7 @@ const AddItem = () => {
   const { t } = useTranslation();
 
   return (
-    <RouterLink to="/new/$itemId">
+    <RouterLink to="/item/new">
       <Button value="add-item" my={4}>
         <FaPlus fontSize="16px" />
         {t("items.add_item")}
