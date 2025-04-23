@@ -6,7 +6,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlmodel import func, select
 
 from app.api.deps import CurrentUser, SessionDep
-from app.models import Message, AgentsPublic, AgentPublic, AgentCreate, Agent
+from app.models import Agent, AgentCreate, AgentPublic, AgentsPublic, Message
 
 router = APIRouter(prefix="/agents", tags=["agents"])
 
@@ -24,7 +24,10 @@ def read_agents(session: SessionDep, current_user: CurrentUser, skip: int = 0, l
             select(Agent).where(Agent.owner_id == current_user.id).offset(skip).limit(limit)
         ).all()
 
-    return AgentsPublic(data=agents, count=count)
+    return AgentsPublic(
+        data=[AgentPublic.model_validate(agent) for agent in agents],
+        count=count
+    )
 
 
 @router.get("/{id}", response_model=AgentPublic)

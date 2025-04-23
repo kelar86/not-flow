@@ -5,16 +5,15 @@ import jwt
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jwt.exceptions import InvalidTokenError
+from mindsdb_sdk.server import Server
 from pydantic import ValidationError
 from sqlmodel import Session
 
 from app.core import security
 from app.core.config import settings
 from app.core.db import engine
-from app.models import TokenPayload, User
 from app.core.mindsdb_client import mindsdb_client
-
-from mindsdb_sdk.server import Server
+from app.models import TokenPayload, User
 
 reusable_oauth2 = OAuth2PasswordBearer(
     tokenUrl=f"{settings.API_V1_STR}/login/access-token"
@@ -60,7 +59,7 @@ def get_current_active_superuser(current_user: CurrentUser) -> User:
     return current_user
 
 
-def get_mindsdb():
+def get_mindsdb() -> Server:
     return mindsdb_client.get_client()
 
 
