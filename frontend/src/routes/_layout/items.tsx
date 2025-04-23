@@ -110,7 +110,7 @@ function ItemsTable() {
                 {item.description || `${t("table.empty_description")}`}
               </Table.Cell>
               <Table.Cell>
-                <ItemActionsMenu item={item} />
+                <ItemActionsMenu item={item} pageInfo={{itemsLenght: items.length, pageNum: page}} />
               </Table.Cell>
             </Table.Row>
           ))}
@@ -118,6 +118,7 @@ function ItemsTable() {
       </Table.Root>
       <Flex justifyContent="flex-end" mt={4}>
         <PaginationRoot
+          page={page}
           count={count}
           pageSize={PER_PAGE}
           onPageChange={({ page }) => setPage(page)}

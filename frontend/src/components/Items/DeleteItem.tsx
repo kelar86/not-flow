@@ -1,6 +1,5 @@
 import { Button, DialogTitle, Text } from "@chakra-ui/react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { FiTrash2 } from "react-icons/fi"
 
@@ -17,10 +16,11 @@ import {
 } from "@/components/ui/dialog"
 import useCustomToast from "@/hooks/useCustomToast"
 import { useTranslation } from "react-i18next"
+import { useNavigate } from '@tanstack/react-router'
 
-const DeleteItem = ({ id }: { id: string }) => {
+const DeleteItem = ({ id, pageInfo }: { id: string, pageInfo: {itemsLenght: number, pageNum } }) => {
   const { t } = useTranslation()
-  const [isOpen, setIsOpen] = useState(false)
+  const navigate = useNavigate()
   const queryClient = useQueryClient()
   const { showSuccessToast, showErrorToast } = useCustomToast()
   const {
@@ -36,13 +36,16 @@ const DeleteItem = ({ id }: { id: string }) => {
     mutationFn: deleteItem,
     onSuccess: () => {
       showSuccessToast(`${t("items.delete_success")}`)
-      setIsOpen(false)
     },
     onError: () => {
       showErrorToast(`${t("items.delete_error")}`)
     },
     onSettled: () => {
-      queryClient.invalidateQueries()
+      if (pageInfo.itemsLenght > 1 || pageInfo.pageNum === 1 ) {
+        queryClient.invalidateQueries()        
+      } else {
+        navigate({ search: (prev: {page?: number}) => ({ ...prev, page: pageInfo.pageNum - 1 }) })
+      }
     },
   })
 
@@ -55,8 +58,6 @@ const DeleteItem = ({ id }: { id: string }) => {
       size={{ base: "xs", md: "md" }}
       placement="center"
       role="alertdialog"
-      open={isOpen}
-      onOpenChange={({ open }) => setIsOpen(open)}
     >
       <DialogTrigger asChild>
         <Button variant="ghost" size="sm" colorPalette="red">
@@ -87,14 +88,17 @@ const DeleteItem = ({ id }: { id: string }) => {
                 {t("buttons.cancel")}
               </Button>
             </DialogActionTrigger>
-            <Button
-              variant="solid"
-              colorPalette="red"
-              type="submit"
-              loading={isSubmitting}
-            >
-              {t("buttons.delete")}
-            </Button>
+            <DialogActionTrigger asChild>
+              <Button
+                variant="solid"
+                colorPalette="red"
+                type="submit"
+                loading={isSubmitting}
+              >
+                {t("buttons.delete")}
+              </Button>
+            </DialogActionTrigger>
+           
           </DialogFooter>
         </form>
       </DialogContent>
