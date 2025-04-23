@@ -116,5 +116,7 @@ class Settings(BaseSettings):
 
         return self
 
+    MINDSDB_URL: str = "http://localhost:47334"
+
 
 settings = Settings()  # type: ignore

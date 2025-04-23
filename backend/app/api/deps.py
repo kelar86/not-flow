@@ -12,6 +12,9 @@ from app.core import security
 from app.core.config import settings
 from app.core.db import engine
 from app.models import TokenPayload, User
+from app.core.mindsdb_client import mindsdb_client
+
+from mindsdb_sdk.server import Server
 
 reusable_oauth2 = OAuth2PasswordBearer(
     tokenUrl=f"{settings.API_V1_STR}/login/access-token"
@@ -55,3 +58,10 @@ def get_current_active_superuser(current_user: CurrentUser) -> User:
             status_code=403, detail="The user doesn't have enough privileges"
         )
     return current_user
+
+
+def get_mindsdb():
+    return mindsdb_client.get_client()
+
+
+MDBServer = Annotated[Server, Depends(get_mindsdb)]

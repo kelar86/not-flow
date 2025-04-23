@@ -1,8 +1,10 @@
 import logging
+import re
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
+from typing import Optional, Dict
 
 import emails  # type: ignore
 import jwt
@@ -121,3 +123,47 @@ def verify_password_reset_token(token: str) -> str | None:
         return str(decoded_token["sub"])
     except InvalidTokenError:
         return None
+
+
+def parse_prompt_template(prompt_template: Optional[str]) -> Dict[str, Optional[str]]:
+    if not prompt_template:
+        return {
+            "description": None,
+            "role": None,
+            "goal": None,
+            "backstory": None,
+            "instructions": None
+        }
+
+    headers = ["DESCRIPTION", "ROLE", "GOAL", "BACKSTORY", "INSTRUCTIONS"]
+    section_keys = {h: h.lower() for h in headers}
+    parsed = {v: None for v in section_keys.values()}
+
+    current_section = None
+    buffer = {key: [] for key in section_keys.values()}
+
+    lines = prompt_template.strip().splitlines()
+
+    for line in lines:
+        stripped = line.strip()
+
+        if stripped == "===":
+            break  # stop parsing anything after the separator
+
+        if stripped.startswith("**") and stripped.endswith("**"):
+            header = stripped.strip("*").strip().upper()
+            if header in section_keys:
+                current_section = section_keys[header]
+            else:
+                current_section = None  # unknown header
+            continue
+
+        if current_section:
+            buffer[current_section].append(line)
+
+    for section, lines in buffer.items():
+        joined = "\n".join(lines).strip()
+        parsed[section] = joined if joined else None
+
+    return parsed
+
