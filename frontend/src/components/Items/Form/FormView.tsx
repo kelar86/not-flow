@@ -2,6 +2,7 @@ import {
     Button, Input, Text, VStack, Flex
   } from '@chakra-ui/react'
   import { useForm } from 'react-hook-form'
+  import { Link as RouterLink } from "@tanstack/react-router"
   import { useMutation, useQueryClient } from '@tanstack/react-query'
   import { useTranslation } from 'react-i18next'
   import { useNavigate } from '@tanstack/react-router'
@@ -89,13 +90,16 @@ import {
         </VStack>
   
         <Flex gap={4} py={6}>
-          <Button variant="subtle" colorPalette="gray" disabled={isSubmitting}>
-            {t('buttons.cancel')}
-          </Button>
+          <RouterLink to="/items" >
+            <Button variant="subtle" colorPalette="gray" disabled={isSubmitting}>
+                {t('buttons.cancel')}
+            </Button>
+          </RouterLink>  
           <Button
             type="submit"
             variant="solid"
             disabled={!isValid}
+            loading={isSubmitting}
           >
             {t('buttons.save')}
           </Button>
