@@ -21,6 +21,7 @@ dependencies = [
     "pydantic-settings<3.0.0,>=2.2.1",
     "sentry-sdk[fastapi]<2.0.0,>=1.40.6",
     "pyjwt<3.0.0,>=2.8.0",
+    "mindsdb-sdk>=3.4.0",
 ]
 
 [tool.uv]
@@ -33,6 +34,9 @@ dev-dependencies = [
     "coverage<8.0.0,>=7.4.3",
 ]
 
+[tool.poetry.group.dev.dependencies]
+setuptools = "^78.1.0"
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
@@ -40,6 +44,10 @@ build-backend = "hatchling.build"
 [tool.mypy]
 strict = true
 exclude = ["venv", ".venv", "alembic"]
+
+[[tool.mypy.overrides]]
+module = "mindsdb_sdk.*"
+ignore_missing_imports = true
 
 [tool.ruff]
 target-version = "py310"

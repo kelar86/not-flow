@@ -5,12 +5,14 @@ import jwt
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jwt.exceptions import InvalidTokenError
+from mindsdb_sdk.server import Server
 from pydantic import ValidationError
 from sqlmodel import Session
 
 from app.core import security
 from app.core.config import settings
 from app.core.db import engine
+from app.core.mindsdb_client import mindsdb_client
 from app.models import TokenPayload, User
 
 reusable_oauth2 = OAuth2PasswordBearer(
@@ -55,3 +57,10 @@ def get_current_active_superuser(current_user: CurrentUser) -> User:
             status_code=403, detail="The user doesn't have enough privileges"
         )
     return current_user
+
+
+def get_mindsdb() -> Server:
+    return mindsdb_client.get_client()
+
+
+MDBServer = Annotated[Server, Depends(get_mindsdb)]

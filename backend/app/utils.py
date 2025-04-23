@@ -121,3 +121,48 @@ def verify_password_reset_token(token: str) -> str | None:
         return str(decoded_token["sub"])
     except InvalidTokenError:
         return None
+
+
+def parse_prompt_template(prompt_template: str | None) -> dict[str, str | None]:
+    if not prompt_template:
+        return {
+            "description": None,
+            "role": None,
+            "goal": None,
+            "backstory": None,
+            "instructions": None
+        }
+
+    headers = ["DESCRIPTION", "ROLE", "GOAL", "BACKSTORY", "INSTRUCTIONS"]
+    section_keys = {h: h.lower() for h in headers}
+
+    parsed: dict[str, str | None] = {v: None for v in section_keys.values()}
+    buffer: dict[str, list[str]] = {key: [] for key in section_keys.values()}
+
+    current_section: str | None = None
+
+    lines = prompt_template.strip().splitlines()
+
+    for line in lines:
+        stripped = line.strip()
+
+        if stripped == "===":
+            break  # Stop parsing after separator
+
+        if stripped.startswith("**") and stripped.endswith("**"):
+            header = stripped.strip("*").strip().upper()
+            if header in section_keys:
+                current_section = section_keys[header]
+            else:
+                current_section = None
+            continue
+
+        if current_section is not None:
+            buffer[current_section].append(line)
+
+    for section, lines in buffer.items():
+        joined = "\n".join(lines).strip()
+        parsed[section] = joined if joined else None
+
+    return parsed
+

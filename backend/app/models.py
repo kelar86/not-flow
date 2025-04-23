@@ -1,6 +1,7 @@
 import uuid
 
-from pydantic import EmailStr
+from pydantic import BaseModel, EmailStr
+from sqlalchemy import UniqueConstraint
 from sqlmodel import Field, Relationship, SQLModel
 
 
@@ -111,3 +112,34 @@ class TokenPayload(SQLModel):
 class NewPassword(SQLModel):
     token: str
     new_password: str = Field(min_length=8, max_length=40)
+
+
+class AgentBase(SQLModel):
+    name: str = Field(min_length=3, max_length=255)
+    description: str | None = Field(default=None, max_length=255)
+    role: str | None = Field(default=None, max_length=255)
+    goal: str | None = Field(default=None, max_length=255)
+    backstory: str | None = Field(default=None, max_length=255)
+    instructions: str | None = Field(default=None, max_length=255)
+
+
+class Agent(AgentBase, table=True):
+    __table_args__ = (
+        UniqueConstraint("name", "owner_id", name="uq_agent_name_owner"),
+    )
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    owner_id: uuid.UUID = Field(foreign_key="user.id", nullable=False, ondelete="CASCADE")
+
+
+class AgentPublic(AgentBase):
+    id: uuid.UUID
+    owner_id: uuid.UUID
+
+
+class AgentCreate(AgentBase):
+    pass
+
+
+class AgentsPublic(BaseModel):
+    data: list[AgentPublic]
+    count: int
