@@ -7,8 +7,9 @@ import DeleteAccount from "@/components/UserSettings/DeleteAccount"
 import UserInformation from "@/components/UserSettings/UserInformation"
 import useAuth from "@/hooks/useAuth"
 import { useTranslation } from "react-i18next"
+import type { TFunction } from 'i18next'
 
-const getTabsConfig = (t) => {
+const getTabsConfig = (t: TFunction ) => {
   const tabsConfig = [
     { value: "my-profile", title: `${t("settings.profile.subtitle")}`, component: UserInformation },
     { value: "password", title: `${t("settings.password.subtitle")}`, component: ChangePassword },

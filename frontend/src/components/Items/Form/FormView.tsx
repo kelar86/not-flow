@@ -89,14 +89,13 @@ import {
         </VStack>
   
         <Flex gap={4} py={6}>
-          <Button variant="subtle" colorPalette="gray" isDisabled={isSubmitting}>
+          <Button variant="subtle" colorPalette="gray" disabled={isSubmitting}>
             {t('buttons.cancel')}
           </Button>
           <Button
             type="submit"
             variant="solid"
-            isDisabled={!isValid}
-            isLoading={isSubmitting}
+            disabled={!isValid}
           >
             {t('buttons.save')}
           </Button>
