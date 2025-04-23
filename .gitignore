@@ -1,0 +1,13 @@
+.vscode
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+
+
+.DS_Store
+.idea/
+backend/.DS_Store
+backend/.idea/
+backend/poetry.lock
