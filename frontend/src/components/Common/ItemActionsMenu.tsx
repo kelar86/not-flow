@@ -7,10 +7,11 @@ import DeleteItem from "../Items/DeleteItem"
 import EditItem from "../Items/EditItem"
 
 interface ItemActionsMenuProps {
-  item: ItemPublic
+  item: ItemPublic,
+  pageInfo: {itemsLenght: number, pageNum: number }
 }
 
-export const ItemActionsMenu = ({ item }: ItemActionsMenuProps) => {
+export const ItemActionsMenu = ({ item, pageInfo }: ItemActionsMenuProps) => {
   return (
     <MenuRoot>
       <MenuTrigger asChild>
@@ -20,7 +21,7 @@ export const ItemActionsMenu = ({ item }: ItemActionsMenuProps) => {
       </MenuTrigger>
       <MenuContent>
         <EditItem item={item} />
-        <DeleteItem id={item.id} />
+        <DeleteItem id={item.id} pageInfo={pageInfo} />
       </MenuContent>
     </MenuRoot>
   )
