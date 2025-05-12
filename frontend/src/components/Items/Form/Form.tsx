@@ -2,7 +2,7 @@ import { useParams } from '@tanstack/react-router'
 import { FormSkeleton } from "./FormSkeleton"
 import { useQuery } from '@tanstack/react-query'
 
-import { ItemsService, type ItemCreate } from '@/client'
+import { AgentsService, type AgentCreate } from '@/client'
 import { FormView } from './FormView'
 
 export function Form() {
@@ -11,7 +11,7 @@ export function Form() {
 
   const { data: itemData, isLoading } = useQuery({
     queryKey: ['item', { id: itemId }],
-    queryFn: () => ItemsService.readItem({ id: itemId! }),
+    queryFn: () => AgentsService.readAgent({ id: itemId! }),
     enabled: isEditMode,
   })
 
@@ -19,7 +19,7 @@ export function Form() {
     return <FormSkeleton />
   }
 
-  const defaultValues: ItemCreate = itemData ?? { title: '', description: '' }
+  const defaultValues: AgentCreate = itemData ?? { name: '', description: '', role: '', goal: '', backstory: '', instructions: '' }
 
   return (
     <FormView

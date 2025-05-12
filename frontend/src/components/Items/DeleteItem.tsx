@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useForm } from "react-hook-form"
 import { FiTrash2 } from "react-icons/fi"
 
-import { ItemsService } from "@/client"
+import { AgentsService } from "@/client"
 import {
   DialogActionTrigger,
   DialogBody,
@@ -29,7 +29,7 @@ const DeleteItem = ({ id, pageInfo }: { id: string, pageInfo: {itemsLenght: numb
   } = useForm()
 
   const deleteItem = async (id: string) => {
-    await ItemsService.deleteItem({ id: id })
+    await  AgentsService.deleteAgent({ id: id })
   }
 
   const mutation = useMutation({

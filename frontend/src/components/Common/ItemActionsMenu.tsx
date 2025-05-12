@@ -2,16 +2,16 @@ import { IconButton } from "@chakra-ui/react"
 import { BsThreeDotsVertical } from "react-icons/bs"
 import { MenuContent, MenuRoot, MenuTrigger } from "../ui/menu"
 
-import type { ItemPublic } from "@/client"
+import type { AgentsPublic } from "@/client"
 import DeleteItem from "../Items/DeleteItem"
 import EditItem from "../Items/EditItem"
 
-interface ItemActionsMenuProps {
-  item: ItemPublic,
+interface AgentActionsMenuProps {
+  item: AgentsPublic,
   pageInfo: {itemsLenght: number, pageNum: number }
 }
 
-export const ItemActionsMenu = ({ item, pageInfo }: ItemActionsMenuProps) => {
+export const ItemActionsMenu = ({ item, pageInfo }: AgentActionsMenuProps) => {
   return (
     <MenuRoot>
       <MenuTrigger asChild>
