@@ -11,7 +11,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router"
 import { FiSearch } from "react-icons/fi"
 import { z } from "zod"
 
-import { ItemsService } from "@/client"
+import { AgentsService } from "@/client"
 import { ItemActionsMenu } from "@/components/Common/ItemActionsMenu"
 import AddItem from "@/components/Items/AddItem"
 import PendingItems from "@/components/Pending/PendingItems"
@@ -32,7 +32,7 @@ const PER_PAGE = 5
 function getItemsQueryOptions({ page }: { page: number }) {
   return {
     queryFn: () =>
-      ItemsService.readItems({ skip: (page - 1) * PER_PAGE, limit: PER_PAGE }),
+      AgentsService.readAgents({ skip: (page - 1) * PER_PAGE, limit: PER_PAGE }),
     queryKey: ["items", { page }],
   }
 }
@@ -87,9 +87,9 @@ function ItemsTable() {
       <Table.Root size={{ base: "sm", md: "md" }}>
         <Table.Header>
           <Table.Row>
-            <Table.ColumnHeader w="sm">{t("table.id")}</Table.ColumnHeader>
             <Table.ColumnHeader w="sm">{t("table.title")}</Table.ColumnHeader>
             <Table.ColumnHeader w="sm">{t("table.description")}</Table.ColumnHeader>
+            <Table.ColumnHeader w="sm">{t("table.role")}</Table.ColumnHeader>
             <Table.ColumnHeader w="sm">{t("table.actions")}</Table.ColumnHeader>
           </Table.Row>
         </Table.Header>
@@ -97,17 +97,17 @@ function ItemsTable() {
           {items?.map((item) => (
             <Table.Row key={item.id} opacity={isPlaceholderData ? 0.5 : 1}>
               <Table.Cell truncate maxW="sm">
-                {item.id}
+                {item.name}
               </Table.Cell>
               <Table.Cell truncate maxW="sm">
-                {item.title}
+                {item.description}
               </Table.Cell>
               <Table.Cell
                 color={!item.description ? "gray" : "inherit"}
                 truncate
                 maxW="30%"
               >
-                {item.description || `${t("table.empty_description")}`}
+                {item.role || `${t("table.empty_description")}`}
               </Table.Cell>
               <Table.Cell>
                 <ItemActionsMenu item={item} pageInfo={{itemsLenght: items.length, pageNum: page}} />
