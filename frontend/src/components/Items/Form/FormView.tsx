@@ -1,5 +1,5 @@
 import {
-    Button, Input, Text, VStack, Flex
+    Button, Input, Text, VStack, Flex, Textarea
   } from '@chakra-ui/react'
   import { useForm } from 'react-hook-form'
   import { Link as RouterLink } from "@tanstack/react-router"
@@ -8,12 +8,12 @@ import {
   import { useNavigate } from '@tanstack/react-router'
   
   import { Field } from '@/components/ui/field'
-  import { ItemsService, type ItemCreate } from '@/client'
+  import { AgentsService, type AgentCreate } from '@/client'
   import useCustomToast from '@/hooks/useCustomToast'
   import { handleError } from '@/utils'
   
   interface FormViewProps {
-    defaultValues: ItemCreate
+    defaultValues: AgentCreate
     isEditMode: boolean
     itemId?: string
   }
@@ -28,16 +28,16 @@ import {
       register,
       handleSubmit,
       formState: { errors, isValid, isSubmitting }
-    } = useForm<ItemCreate>({
+    } = useForm<AgentCreate>({
       mode: 'onBlur',
       defaultValues,
     })
   
     const mutation = useMutation({
-      mutationFn: (data: ItemCreate) => {
+      mutationFn: (data: AgentCreate) => {
         return isEditMode
-          ? ItemsService.updateItem({ id: itemId!, requestBody: data })
-          : ItemsService.createItem({ requestBody: data })
+          ? AgentsService.updateAgent({ id: itemId!, requestBody: data })
+          : AgentsService.createAgent({ requestBody: data })
       },
       onSuccess: () => {
         showSuccessToast(
@@ -49,7 +49,7 @@ import {
       onError: handleError
     })
   
-    const onSubmit = (data: ItemCreate) => {
+    const onSubmit = (data: AgentCreate) => {
       mutation.mutate(data)
     }
   
@@ -65,12 +65,12 @@ import {
         <VStack gap={4}>
           <Field
             required
-            invalid={!!errors.title}
-            errorText={errors.title?.message}
+            invalid={!!errors.name}
+            errorText={errors.name?.message}
             label={t('items.bot_name')}
           >
             <Input
-              {...register('title', {
+              {...register('name', {
                 required: t('items.required_name')
               })}
               placeholder={t('items.bot_name')}
@@ -82,9 +82,65 @@ import {
             errorText={errors.description?.message}
             label={t('items.bot_desc')}
           >
-            <Input
+            <Textarea
               {...register('description')}
               placeholder={t('items.bot_desc')}
+            />
+          </Field>
+
+          <Field
+            required
+            invalid={!!errors.role}
+            errorText={errors.role?.message}
+            label={t('items.bot_role')}
+          >
+            <Textarea
+              {...register('role', {
+                required: t('items.required')
+              })}
+              placeholder={t('items.bot_role')}
+            />
+          </Field>
+
+          <Field
+            required
+            invalid={!!errors.goal}
+            errorText={errors.goal?.message}
+            label={t('items.bot_goal')}
+          >
+            <Textarea
+              {...register('goal', {
+                required: t('items.required')
+              })}
+              placeholder={t('items.bot_goal')}
+            />
+          </Field>
+
+          <Field
+            required
+            invalid={!!errors.backstory}
+            errorText={errors.backstory?.message}
+            label={t('items.bot_backstory')}
+          >
+            <Textarea
+              {...register('backstory', {
+                required: t('items.required')
+              })}
+              placeholder={t('items.bot_backstory')}
+            />
+          </Field>
+
+          <Field
+            required
+            invalid={!!errors.instructions}
+            errorText={errors.instructions?.message}
+            label={t('items.bot_instructions')}
+          >
+            <Textarea
+              {...register('instructions', {
+                required: t('items.required')
+              })}
+              placeholder={t('items.bot_instructions')}
             />
           </Field>
         </VStack>
