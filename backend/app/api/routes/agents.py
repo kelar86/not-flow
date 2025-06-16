@@ -12,21 +12,27 @@ router = APIRouter(prefix="/agents", tags=["agents"])
 
 
 @router.get("/", response_model=AgentsPublic)
-def read_agents(session: SessionDep, current_user: CurrentUser, skip: int = 0, limit: int = 100) -> Any:
+def read_agents(
+    session: SessionDep, current_user: CurrentUser, skip: int = 0, limit: int = 100
+) -> Any:
     if current_user.is_superuser:
         count = session.exec(select(func.count()).select_from(Agent)).one()
         agents = session.exec(select(Agent).offset(skip).limit(limit)).all()
     else:
         count = session.exec(
-            select(func.count()).select_from(Agent).where(Agent.owner_id == current_user.id)
+            select(func.count())
+            .select_from(Agent)
+            .where(Agent.owner_id == current_user.id)
         ).one()
         agents = session.exec(
-            select(Agent).where(Agent.owner_id == current_user.id).offset(skip).limit(limit)
+            select(Agent)
+            .where(Agent.owner_id == current_user.id)
+            .offset(skip)
+            .limit(limit)
         ).all()
 
     return AgentsPublic(
-        data=[AgentPublic.model_validate(agent) for agent in agents],
-        count=count
+        data=[AgentPublic.model_validate(agent) for agent in agents], count=count
     )
 
 
@@ -41,7 +47,9 @@ def read_agent(session: SessionDep, current_user: CurrentUser, id: uuid.UUID) ->
 
 
 @router.post("/", response_model=AgentPublic)
-def create_agent(session: SessionDep, current_user: CurrentUser, agent_in: AgentCreate) -> Any:
+def create_agent(
+    session: SessionDep, current_user: CurrentUser, agent_in: AgentCreate
+) -> Any:
     agent = Agent.model_validate(agent_in, update={"owner_id": current_user.id})
     session.add(agent)
     try:
@@ -57,7 +65,9 @@ def create_agent(session: SessionDep, current_user: CurrentUser, agent_in: Agent
 
 
 @router.put("/{id}", response_model=AgentPublic)
-def update_agent(session: SessionDep, current_user: CurrentUser, id: uuid.UUID, agent_in: AgentCreate) -> Any:
+def update_agent(
+    session: SessionDep, current_user: CurrentUser, id: uuid.UUID, agent_in: AgentCreate
+) -> Any:
     agent = session.get(Agent, id)
     if not agent:
         raise HTTPException(status_code=404, detail="Agent not found")
@@ -92,4 +102,3 @@ def delete_agent(session: SessionDep, current_user: CurrentUser, id: uuid.UUID) 
     session.delete(agent)
     session.commit()
     return Message(message="Agent deleted successfully")
-

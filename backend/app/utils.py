@@ -130,7 +130,7 @@ def parse_prompt_template(prompt_template: str | None) -> dict[str, str | None]:
             "role": None,
             "goal": None,
             "backstory": None,
-            "instructions": None
+            "instructions": None,
         }
 
     headers = ["DESCRIPTION", "ROLE", "GOAL", "BACKSTORY", "INSTRUCTIONS"]
@@ -165,4 +165,3 @@ def parse_prompt_template(prompt_template: str | None) -> dict[str, str | None]:
         parsed[section] = joined if joined else None
 
     return parsed
-

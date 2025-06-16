@@ -124,11 +124,11 @@ class AgentBase(SQLModel):
 
 
 class Agent(AgentBase, table=True):
-    __table_args__ = (
-        UniqueConstraint("name", "owner_id", name="uq_agent_name_owner"),
-    )
+    __table_args__ = (UniqueConstraint("name", "owner_id", name="uq_agent_name_owner"),)
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
-    owner_id: uuid.UUID = Field(foreign_key="user.id", nullable=False, ondelete="CASCADE")
+    owner_id: uuid.UUID = Field(
+        foreign_key="user.id", nullable=False, ondelete="CASCADE"
+    )
 
 
 class AgentPublic(AgentBase):
