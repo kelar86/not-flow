@@ -4,7 +4,7 @@ import json
 import sqlite3  # or SQLAlchemy if preferred
 
 
-async def load_crew_from_db(crew_id: int):
+async def load_crew_from_db(crew_id: int, *, step_callback=None, task_callback=None):
     # conn = sqlite3.connect("your.db")
     # cursor = conn.cursor()
     #
@@ -47,6 +47,7 @@ async def load_crew_from_db(crew_id: int):
     )
 
     task = Task(
+        # name="Answer the question",
         description="Answer the user's question directly and concisely: {user_input}",
         expected_output="A short, factual answer with no reasoning or thoughts.",
         agent=agent,
@@ -63,6 +64,8 @@ async def load_crew_from_db(crew_id: int):
         # memory=memory,
         share_crew=False,
         # planning=True
+        step_callback=step_callback,
+        task_callback=task_callback
     )
 
     # crew = Crew(agents=list(agents.values()), tasks=tasks, verbose=True)
