@@ -1,6 +1,12 @@
-from fastapi import WebSocket, APIRouter
+import json
+from typing import AsyncGenerator
+
+from fastapi import WebSocket, APIRouter, Request
 from uuid import uuid4
 import asyncio
+
+from fastapi.responses import StreamingResponse
+
 from app.core.crew_ai import load_crew_from_db
 
 router = APIRouter(prefix="/chat", tags=["chat"])
@@ -68,3 +74,42 @@ async def chat_with_crew(ws: WebSocket, id: int):
     except Exception as e:
         await ws.send_json({"type": "error", "message": str(e)})
         await ws.close()
+
+
+@router.post("/{id}")
+async def chat_rest_endpoint(id: int, request: Request):
+    body = await request.json()
+    user_input = body.get("text")
+    messages = body.get("messages", [])
+
+    loop = asyncio.get_event_loop()
+
+    async def streamer() -> AsyncGenerator[str, None]:
+        queue = asyncio.Queue()
+
+        # No step_callback or task_callback needed
+        crew = await load_crew_from_db(id)
+
+        async def run_crew():
+            result = await crew.kickoff_async(inputs={"user_input": user_input})
+            data = {
+                "type": "part",
+                "delta": {
+                    "role": "assistant",
+                    "content": result.raw
+                }
+            }
+            await queue.put(data)
+            await queue.put(None)
+
+        asyncio.create_task(run_crew())
+
+        while True:
+            item = await queue.get()
+            if item is None:
+                break
+            yield f"event: part\ndata: {json.dumps(item)}\n\n"
+
+        yield f"event: done\ndata: {{}}\n\n"
+
+    return StreamingResponse(streamer(), media_type="text/event-stream")
