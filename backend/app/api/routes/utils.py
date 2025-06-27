@@ -29,3 +29,10 @@ def test_email(email_to: EmailStr) -> Message:
 @router.get("/health-check/")
 async def health_check() -> bool:
     return True
+
+
+def format_messages(messages):
+    return "\n".join(
+        f"{msg['role'].capitalize()}: {msg['content']}"
+        for msg in messages
+    )

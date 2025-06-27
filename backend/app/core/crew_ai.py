@@ -47,11 +47,9 @@ async def load_crew_from_db(crew_id: int, *, step_callback=None, task_callback=N
     )
 
     task = Task(
-        # name="Answer the question",
-        description="Answer the user's question directly and concisely: {user_input}",
-        expected_output="A short, factual answer with no reasoning or thoughts.",
-        agent=agent,
-        # output_json=True
+        description="You are answering user questions. Here is the prior chat history:\n{chat_history}\n\nThe new user request is:\n{user_input}",
+        expected_output="A helpful and relevant response to the latest user question.",
+        agent=agent
     )
 
     # 3. Compile crew and run
